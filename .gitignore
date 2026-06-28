@@ -1,0 +1,10 @@
+.gradle/
+.vscode/
+build/
+app/build/
+local.properties
+myAPINvidia.txt
+*.apk
+*.aab
+*.jks
+*.keystore

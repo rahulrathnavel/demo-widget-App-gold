@@ -1,0 +1,9 @@
+<resources>
+    <color name="aura_purple">#4E20B8</color>
+    <color name="aura_purple_dark">#220D55</color>
+    <color name="aura_gold">#F3C764</color>
+    <color name="aura_bg">#0F1020</color>
+    <color name="aura_card">#181A2B</color>
+    <color name="aura_text">#FFFFFF</color>
+    <color name="aura_muted">#B9B7CB</color>
+</resources>

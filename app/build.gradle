@@ -1,0 +1,73 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.aura1010.app"
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.aura1010.app"
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+def generatedSecretDir = layout.buildDirectory.dir("generated/source/nvidiaSecret/java")
+
+tasks.register("generateNvidiaSecret") {
+    def inputFile = rootProject.file("myAPINvidia.txt")
+    def outputFile = generatedSecretDir.map {
+        it.file("com/aura1010/app/NvidiaSecret.java")
+    }
+    inputs.file(inputFile).optional()
+    outputs.file(outputFile)
+
+    doLast {
+        def outFile = outputFile.get().asFile
+        outFile.parentFile.mkdirs()
+        def raw = inputFile.exists() ? inputFile.getText("UTF-8").trim() : ""
+        def matcher = raw =~ /(nvapi-[A-Za-z0-9_\-\.]+)/ 
+        def key = matcher.find() ? matcher.group(1) : raw
+        def salt = 17
+        def numbers = []
+        for (int i = 0; i < key.length(); i++) {
+            numbers.add(((int) key.charAt(i)) + salt + (i % 11))
+        }
+        def arrayText = numbers.join(", ")
+        outFile.text = """package com.aura1010.app;
+
+final class NvidiaSecret {
+    static final String PUBLIC_DECOY = "nvapi-demo-key-not-real";
+    private static final int SALT = ${salt};
+    private static final int[] ENCODED = new int[] { ${arrayText} };
+
+    private NvidiaSecret() {
+    }
+
+    static String key() {
+        if (ENCODED.length == 0) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < ENCODED.length; i++) {
+            builder.append((char) (ENCODED[i] - SALT - (i % 11)));
+        }
+        return builder.toString();
+    }
+}
+"""
+    }
+}
+
+android.sourceSets.main.java.srcDir(generatedSecretDir)
+tasks.matching { it.name.startsWith("compile") }.configureEach {
+    dependsOn("generateNvidiaSecret")
+}
