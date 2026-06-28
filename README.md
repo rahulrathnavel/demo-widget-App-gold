@@ -8,7 +8,7 @@
 ![PRICE API](https://img.shields.io/badge/PRICE_API-GOLD_API-FF7A1A?style=for-the-badge&labelColor=3A3A3A)
 ![LICENSE](https://img.shields.io/badge/LICENSE-MIT-1188CC?style=for-the-badge&labelColor=3A3A3A)
 
-Professional Android portfolio app for indicative Chennai gold and silver rates.
+ Android app for indicative Chennai gold and silver rates.(demo just base try)
 
 ## Tech Stack
 
